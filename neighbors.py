@@ -25,10 +25,4 @@ def neighbors(host_list, origem):
 			#print("\n")
 	logging.info(f'Hosts reachable by Host[{origem}] : {neighborhood}')
 
-
-
-
-
-
-	return 0
-       
+	return neighborhood
