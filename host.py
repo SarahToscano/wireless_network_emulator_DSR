@@ -1,3 +1,6 @@
+from physical_layer import physical
+from neighbors import neighbors
+
 class host:
     def __init__(self, x, y, reach, mac):	#delfaut constructor
         self.posX = x
@@ -5,11 +8,14 @@ class host:
         self.reach = reach
         self.mac = mac   
     
-    def sender(self, message, ID):	#delfaut constructor
+    def sender(self, mensage, ID, hosts_list):	#delfaut constructor
         self.sender_id = self.mac
-        self.message = message
+        self.mensage = mensage
         self.ID = ID
-        print(message)
+        neighboorhood= neighbors(hosts_list, self.sender_id)
+        physical(neighboorhood, self.sender_id, mensage)
+
+
 
 
 

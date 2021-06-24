@@ -1,7 +1,6 @@
 import math
 import logging
 
-
 def neighbors(host_list, origem):
 	logging.info(f'-> Finding the neighborhood of Host[{origem}] ')
 
