@@ -1,17 +1,18 @@
-from physical_layer import physical
 from neighbors import neighbors
 from controller import requests_n
 
 class host:
-    def __init__(self, x, y, reach, mac):	#delfaut constructor
+    def __init__(self, x, y, reach, mac, pckg):	#delfaut constructor
         self.posX = x
         self.posY = y
         self.reach = reach
         self.mac = mac 
+        self.pckg = pckg
 
     def sender(self, mensage, ID):	#delfaut constructor
         self.mensage = mensage
         self.ID = ID
+        
   
     #Getter Method
     def get_posX(self):
