@@ -16,3 +16,4 @@ def neighbors(host_list, origem):
 				neighborhood.append((getattr(host_list[i],'mac')))
 	logging.info(f'Hosts reachable by Host[{origem}] : {neighborhood}')
 	return neighborhood
+
