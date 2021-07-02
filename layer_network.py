@@ -65,3 +65,39 @@ class Network_layer:
         print("ID: ", id, "Mensg: ", mensagem,
               " Numero de seq: ", sequenNum)
 
+    def send_pack(self):
+        if(self._pcks_list != []): #is there any package?
+            pckg = self._pcks_list[0]
+            header = pckg.get_header_network()
+            seq = None
+
+            for route in self._routes:
+                if(route._receiver == pckg._headers[0].final_mac):
+                    seq = route._seq
+                    if (pckg._headers[0].final_mac in self._wait_routes_list):
+                        self._wait_routes_list.remove(
+                            pckg._headers[0].final_mac)
+
+            # Is there this route?
+            if(seq != None):
+                pckg.refresh_sequence(seq)
+                self._pcks_list.pop(0)
+
+                for i, mac in enumerate(pckg._headers[0]._seq_list):
+                    id = self._layer_link._layer_physical._mac
+                    if(mac == id):
+                        next_node = header.seq_list[i+1]
+                        break
+                self._layer_link.add_pck(pckg, next_node)
+                id = self._layer_link._layer_physical._mac
+                mac_id_send_list.append(id)
+
+            elif(not header.final_mac in self._wait_routes_list):
+
+                self._wait_routes_list.append(
+                    pckg._headers[0].final_mac)
+                self.RREQ(pckg._headers[0].final_mac)
+
+        # Send pckgs to link layer
+        self._layer_link.send_pack()
+
