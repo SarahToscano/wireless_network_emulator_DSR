@@ -1,7 +1,6 @@
 from host import host
-from physical_layer import physical_send
+from physical_layer import physical
 import logging
-from controller import requests_n
 
 logging.basicConfig(filename='report.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
@@ -26,7 +25,10 @@ sender_list = [h1,h3]
 h1.sender(mensage=["m1", "m2", "m3"], ID=4)
 h3.sender(mensage=["m6"], ID=0)
 
-req = requests_n(sender_list, hosts_list)
+for i in range (0, len(sender_list)):
+    #req = host.requests_n(sender_list[i], hosts_list)
+    req = physical.physical_send(sender_list[i], hosts_list)
+
 logging.warning(f'{req} mensage requests')
 
 

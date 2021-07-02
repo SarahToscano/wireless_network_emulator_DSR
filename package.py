@@ -1,25 +1,40 @@
 import logging
+from header import Header
 
-class package:
-	def __init__(self, id, type, origem, ID, mensage):
-		self.id = id
-		self.type = type
-		self.route = []
-		self.next = 0
-		self.mensage = mensage
-		self.origem = origem
-		self.ID = ID
+class Package:
+
+	def __init__(self, mensage, t):
+		self._id = -1
+		self._data = mensage
+		self._t = t
+		self._headers = []
 		
-	def add_route(self, host):
-		if(self.type == 'RREQ' or self.type == 'RREP'):
-			self.route.append(host)    
-			aux = getattr(host,'mac')
-			logging.info(f'Adding host[{aux}] to the route list')
+	@staticmethod
+	def create_pck(mensage, t):
+		return Package(mensage, t)
 
-	def set_next_mac(self, next_mac):
-		if(self.type == 'RREQ' or self.type == 'RREP'):
-			self.next.append(next_mac)
-			print(f'The next host will be [{next_mac}')
+	def get_header_network(self):
+		for header in self._headers:
+			if(header._type_layer == "Network"):
+				return header
+	
+	def get_header_link(self):
+		for header in self._headers:
+			if(header._type_layer == "Link"):
+				return header
+	
+	def add_header(self, header):
+		self._headers.append(header)
+
+	def show_pck_info(self):
+		print("Dados: ", self._data)
+
+	def refresh_sequence(self, sequence):
+		for header in self._headers:
+			if (header._type_layer == "Network"):
+				header._seq_list = sequence
+
+
 
 	
 

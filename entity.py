@@ -1,0 +1,5 @@
+hosts_list = []
+packages_list = []
+mac_id_send_list = []
+show_mac_id_list = []
+next_send_list = []
