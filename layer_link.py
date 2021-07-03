@@ -13,7 +13,7 @@ class Link_Layer:
         self._Physical_Layer = Physical_Layer
         self._pck_read = []
 
-    def send_pck(self):
+    def send_pack(self):
         self._way_access = self.way_access()
 
         if(self._way_access == True):  # verifica se o meio está livre
@@ -59,4 +59,4 @@ class Link_Layer:
         header = Header("Link", self._Physical_Layer._mac,
                         final_mac, 0, -1, -1, -1)
         Package.add_header(header)
-        self._Physical_Layer.send_pck(Package)
+        self._Physical_Layer.send_pack(Package)

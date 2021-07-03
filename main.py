@@ -26,8 +26,10 @@ h0 = Host(x=0, y=0, reach=2, mac=0, energy=10)
 h1 = Host(x=1, y=0, reach=2, mac=1, energy=10)
 h2 = Host(x=2, y=1, reach=2, mac=2, energy=10)
 h3 = Host(x=3, y=0, reach=2, mac=3, energy=10)
-h2 = Host(x=4, y=0, reach=2, mac=4, energy=10)
-h4 = Host(x=5, y=3, reach=4, mac=5, energy=10)
+h4 = Host(x=4, y=0, reach=2, mac=4, energy=10)
+h5 = Host(x=5, y=3, reach=4, mac=5, energy=10)
+
+hosts_list = [h0, h1, h2, h3, h4, h5]
 
 mac = []
 x = []
@@ -35,7 +37,7 @@ y = []
 reach = []
 
 for host in hosts_list:
-    mac.append(host._Layer_network._link_layer._Physical_Layer._mac)
+    mac.append(host._layer_network._link_layer._Physical_Layer._mac)
     x.append(host._layer_network._link_layer._Physical_Layer._x)
     y.append(host._layer_network._link_layer._Physical_Layer._y)
     reach.append(host._layer_network._link_layer._Physical_Layer._reach)

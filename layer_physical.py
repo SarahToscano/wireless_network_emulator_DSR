@@ -31,12 +31,12 @@ class Physical_Layer:
                     if(hosts_list[i] not in self._neighborhood):
                         self._neighborhood.append(hosts_list[i])
 
-    def send_pck(self, package):
+    def send_pack(self, package):
         self.find_neighbors()
         self._pck_sent.append(package)
         print(package, self._pck_sent, self._pck_sent[0],"teste")
         for host in self._neighborhood:
             # Send packages to their neighborhood
-            host.link_layer.receive_pck()
+            host._layer_network._link_layer.receive_pck()
         # Add package to save list
         self._pck_saves.append(self._pck_sent.pop(0))
