@@ -3,7 +3,6 @@ from entity import next_send_list, show_mac_id_list
 from package import Package
 from random import randint
 from header import Header
-#from importar cores gospeis#
 
 
 class Link_Layer:
@@ -44,6 +43,9 @@ class Link_Layer:
                 elif(header._final_mac == -1):
                     self._pck_read.append(Package)
 
+    def show_Backoff(self, mac, backoff):
+        print("\rID: ", mac, ": No entrou em Backoff, valor: ", backoff)
+
     def print_collision(self, mac):
         print("\rID: ", mac, "Houve Colisão")
 
@@ -53,8 +55,8 @@ class Link_Layer:
         else:
             return False
 
-    def add_pck(self, final_mac, Package):
+    def add_pck(self,  Package, final_mac):
         header = Header("Link", self._Physical_Layer._mac,
                         final_mac, 0, -1, -1, -1)
         Package.add_header(header)
-        self._Physical_Layer._send_pck.append(Package)
+        self._Physical_Layer.send_pck(Package)

@@ -52,7 +52,7 @@ class Network_layer:
     def add_pck(self, mac_final, mensage, t):
         id = self._link_layer._Physical_Layer._mac
         pck = Package(mensage, t)
-        header = Header("REDE", id, mac_final, -1, -1, -1, None)
+        header = Header("Network", id, mac_final, -1, -1, -1, None)
         pck.add_header(header)
         self._pcks_list.append(pck)  # Add package to list
 
@@ -68,42 +68,42 @@ class Network_layer:
 
     def send_pack(self):
         if(self._pcks_list != []):  # is there any package?
-            pckg = self._pcks_list[0]
-            header = pckg.get_header_network()
+            pck = self._pcks_list[0]
+            header = pck.get_header_network()
             seq = None
 
             for route in self._routes:
-                if(route._receiver == pckg._headers[0].final_mac):
+                if(route._receiver == pck._headers[0].final_mac):
                     seq = route._seq
-                    if (pckg._headers[0].final_mac in self._wait_routes_list):
+                    if (pck._headers[0].final_mac in self._wait_routes_list):
                         self._wait_routes_list.remove(
-                            pckg._headers[0].final_mac)
+                            pck._headers[0].final_mac)
 
             # Is there this route?
             if(seq != None):
-                pckg.refresh_sequence(seq)
+                pck.refresh_sequence(seq)
                 self._pcks_list.pop(0)
 
-                for i, mac in enumerate(pckg._headers[0]._seq_list):
+                for i, mac in enumerate(pck._headers[0]._seq_list):
                     id = self._link_layer._Physical_Layer._mac
                     if(mac == id):
                         next_node = header.num_pack[i+1]
                         break
-                self._link_layer.add_pck(pckg, next_node)
+                self._link_layer.add_pck(pck, next_node)
                 id = self._link_layer._Physical_Layer._mac
                 mac_id_send_list.append(id)
 
-            elif(not header.final_mac in self._wait_routes_list):
+            elif(not header._final_mac in self._wait_routes_list):
 
                 self._wait_routes_list.append(
-                    pckg._headers[0].final_mac)
-                self.RREQ(pckg._headers[0].final_mac)
+                    pck._headers[0]._final_mac)
+                self.RREQ(pck._headers[0]._final_mac)
 
         # Send pckgs to link layer
         self._link_layer.send_pack()
 
-    def receive_pack(self):
-        self._link_layer.recebePacote()  # Trata pacote recebido na camada de enlace
+    def receive_pck(self):
+        self._link_layer.receive_pack()  # Trata pacote recebido na camada de enlace
 
         # Verifica se tem pacotes recebidos
         if(self._link_layer._pck_read != []):
