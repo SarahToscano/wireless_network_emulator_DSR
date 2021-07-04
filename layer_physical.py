@@ -22,9 +22,10 @@ class Physical_Layer:
         self._energy = energy
 
     def receive_pck(self, package):
-        print(FISICA, "PACKAGE RECEIVED IN PHYSICAL LAYER")
-
+        print(FISICA, "[Physical Layer] - Receive Confirmantion")
         show_mac_id_list.append(self._mac)  # Global List
+
+        print(FISICA, f"[Physical Layer] - Router [{self._mac}] received the package - OK!")
         self._pck_received.append(package)  # Add package to received list
 
     def find_neighbors(self):
@@ -40,13 +41,16 @@ class Physical_Layer:
                         self._neighborhood.append(hosts_list[i])
 
     def send_pack(self, package):
-        print(FISICA, "Physical Layer Activated")
+        print(FISICA, "PHYSICAL LAYER ACTIVATED")
         self.find_neighbors()
         self._pck_sent.append(package)
-        #print(package, self._pck_sent, self._pck_sent[0],"teste")
+        
         for host in self._neighborhood:
-            print(FISICA, "Send packages to their neighborhood")
+            print(FISICA, "[Physical Layer] - Send packages to the neighborhood: Broadcast")
             host._layer_network._link_layer._Physical_Layer.receive_pck(self._pck_sent[0])
+
         # Add package to save list
-        print(FISICA, "Adding the pack in the save list")
+        print(FISICA, "[Physical Layer] - Adding the pack in the save list")
         self._pck_saves.append(self._pck_sent.pop(0))
+
+        

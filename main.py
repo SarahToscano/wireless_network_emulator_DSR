@@ -10,6 +10,7 @@ import logging
 from colors import LINK
 from colors import REDE
 from colors import FISICA
+from colors import verde
 
 logging.basicConfig(filename='report.log', filemode='w',
                     format=' %(levelname)s - %(message)s')
@@ -32,56 +33,56 @@ h5 = Host(x=5, y=3, reach=4, mac=5, energy=10)
 logging.info(f'Creating {len(hosts_list)} Wireless Hosts...')
 print("\033[37m",f'Creating {len(hosts_list)} Wireless Hosts...')
 
-timemax = 80
+timemax = 10
 for i in range(timemax):
     print("\033[35m", "\n TIME: ", i, end="\n\n", )
-    logging.info(f"\n TIME: {i}")
-
-
-    #Create all packages
     print("\033[34m", 'LOOP - defining the packages')
-    for host in hosts_list:
-        print("\033[34m",f'Origem: Host[{host._mac}]')
-        prob = random.randint(0, 10)
 
-        destinationHost = random.randint(0, len(hosts_list)-1)
-        print("\033[34m",f'Destination: Host[{destinationHost}]')
-        if(prob > 7):
-            
-            #o mac o host que quer enviar é != o que vai receber?
-            if(host._layer_network._link_layer._Physical_Layer._mac != destinationHost):
-                print("\033[32m",'Package? YEEEESS!!!')
+    if(i==0):
+        hosts_list[0].create_packge(0, 2, "msg 1 - lute bem muito")
+        mac_id_send_list.append(hosts_list[0]._layer_network._link_layer._Physical_Layer._mac)
 
-                host.create_packge(i, destinationHost, "msg 1 - testeeeeeeeeeeee")
-                mac_id_send_list.append(
-                    host._layer_network._link_layer._Physical_Layer._mac)
+        hosts_list[1].create_packge(1, 4, "msg 1 - lute bem muito")
+        mac_id_send_list.append(hosts_list[1]._layer_network._link_layer._Physical_Layer._mac)
 
+        '''for host in hosts_list:
+            print('\033[40m', "\033[34m",f'Origem: Host[{host._mac}]')
+            prob = random.randint(0, 10)
+            destinationHost = random.randint(0, len(hosts_list)-1)
+            print("\033[34m",f'Destination: Host[{destinationHost}]')
+            if(prob > 7):
+                #o mac o host que quer enviar é != o que vai receber?
+                if(host._layer_network._link_layer._Physical_Layer._mac != destinationHost):
+                    print("\033[32m",'Package? YEEEESS!!!')
+                    host.create_packge(i, destinationHost, {"msg 1 - testeeeeeeeeeeee", "fdfs"})
+                    mac_id_send_list.append(
+                        host._layer_network._link_layer._Physical_Layer._mac)
+                else:
+                    print("\033[31m", 'Package? NO!!! Same ID and Final Mac ;(')
             else:
-                print("\033[31m", 'Package? NO!!! Same ID and Final Mac ;(')
-            
-        else:
-            if(host._layer_network._link_layer._Physical_Layer._mac == destinationHost):
-                print("\033[31m", 'Package? NO!!! Same ID and Final Mac ;(')
-            else:
-                print("\033[31m", 'Package? NO!!!')
+                if(host._layer_network._link_layer._Physical_Layer._mac == destinationHost):
+                    print("\033[31m", 'Package? NO!!! Same ID and Final Mac ;(')
+                else:
+                    print("\033[31m", 'Package? NO!!!')
+        '''
 
     print("\033[31m" , "next_send_list: ", next_send_list)
     if(next_send_list != []):
-        for i in next_send_list:
-            mac_id_send_list.append(i)
+        for k in next_send_list:
+            mac_id_send_list.append(k)
     del next_send_list[:]
 
     # Existe algum nó querendo receber, recebe
     print("\033[31m" ,"show_mac_id_list: ", show_mac_id_list)
-    for j in show_mac_id_list:
-        hosts_list[j]._layer_network.receive_pck()
+    for k in show_mac_id_list:
+        hosts_list[k]._layer_network.receive_pck()
     del show_mac_id_list[:]
 
     # Existe algum nó querendo transmitir, transmite naquele instante se posssível
     print("\033[31m" , "List of hosts that will send: ", mac_id_send_list)
-    for i in mac_id_send_list:
-        print(REDE, f"host[{hosts_list[i]._mac}] access send_pack method - network layer")
-        hosts_list[i]._layer_network.send_pack()
+    for k in mac_id_send_list:
+        print(verde, f"[main] - host[{hosts_list[k]._mac}] Preparing to send the package to Network Layer")
+        hosts_list[k]._layer_network.send_pack(i)
     del mac_id_send_list[:]
 
     

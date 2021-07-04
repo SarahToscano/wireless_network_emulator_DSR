@@ -21,8 +21,12 @@ class Network_layer:
         self._routes = []
 
     def RREP(self, mac_final, seq, route):
+        print(REDE, "[Layer Network] - Starting the RREP...\n")
+
         id = self._link_layer._Physical_Layer._mac
         header = Header("Network", id, mac_final, -1, 1, -1, seq)
+        print(REDE, "[Layer Network] - Creating the RREP package...\n")
+
         pck = Package(route, 1)  # Create the package
         pck.add_header(header)  # Insert the Network Layer's header
 
@@ -34,59 +38,76 @@ class Network_layer:
             if(mac == id):
                 next_node = header._seq_list[i+1]
                 next_pck = pck
+                print(REDE, "[Layer Network] - Adding RREP package to Link layer...\n")
                 self._link_layer.add_pck(next_pck, next_node)
                 break
 
-    def RREQ(self, mac_final):
+    def RREQ(self, mac_final, t):
+        print(REDE, "[Layer Network] - Starting the RREQ...\n")
+
         id = self._link_layer._Physical_Layer._mac
         seq = []
         seq.append(id)  # add first ID
         seqNum = random.randint(1, 50)  # package num
+        print(REDE, f"[Layer Network] - package ID defined: [{seqNum}]\n")
+
         self._RREQS_list.append(seqNum)
+        print(REDE, f"[Layer Network] - Adding the package[{seqNum}] to RREQS List\n")
 
         header = Header("Network", id, mac_final, -1, 0, seqNum, seq)
+        print(REDE, "[Layer Network] - Creating the RREQ package...\n")
         pck = Package("", 1)  # Create the package
         pck.add_header(header)  # Insert the Network Layer's header
         msg = "Sending RREQ "
-
         # The dif of RREP Mac_final here is None
+        
         self.show_package_Mac(msg, id, None)
+
+        print(REDE, "[Layer Network] - Sending the RREQ package to Link Layer...\n")
         self._link_layer.add_pck(pck, -1)
 
     def show_package(self, mensagem, id, mac_final):
         print("ID: ", id, "Mensg: ", mensagem, " macDest: ", mac_final)
 
     def add_pck(self, mac_final, mensage, t):
+        print(REDE, "Layer Network Activated")
         id = self._link_layer._Physical_Layer._mac
         pck = Package(mensage, t)
         header = Header("Network", id, mac_final, -1, -1, -1, None)
         pck.add_header(header)
+
         self._pcks_list.append(pck)  # Add package to list
-        print(REDE, "adding the package in the package list\n")
+        print(REDE, "[Layer Network] - adding the package in the package list\n")
 
 
     
 
     def show_package_Mac(self, mensagem,  id, mac_final):
-        print("ID: ", id, "Mensg: ", mensagem, " macDest: ", mac_final)
+        print(f"- Package [{id}] Info: ", "Mensg: ", mensagem, " macDest: ", mac_final)
 
     def show_package_Seq(self, mensagem,  id, sequenNum):
-        print("ID: ", id, "Mensg: ", mensagem,
+        print(f"- Package [{id}] Info:", "Mensg: ", mensagem,
               " Numero de seq: ", sequenNum)
 
-    def send_pack(self):
+    def send_pack(self,t):
+        id = self._link_layer._Physical_Layer._mac 
+        print(REDE, "NETWORK LAYER ACTIVATED")
+        print(REDE, f"[Layer Network] - Host[{id}] Preparing to send package\n")
         if(self._pcks_list != []):  # is there any package?
             pck = self._pcks_list[0]
             header = pck.get_header_network()
             seq = None
+            print(REDE, f"[Layer Network] - Host[{id}] -> Host[{pck._headers[0]._final_mac}]\n")
+
 
             for route in self._routes:
                 if(route._receiver == pck._headers[0]._final_mac):
+                    print(REDE, "[Layer Network] - There is already a route to this destinantion!\n")
                     seq = route._seq
                     if (pck._headers[0]._final_mac in self._wait_routes_list):
                         self._wait_routes_list.remove(
                             pck._headers[0]._final_mac)
-            
+                        print(REDE, "[Layer Network] - Yeahh!\n")
 
             # Is there this route?
             if(seq != None):
@@ -100,7 +121,7 @@ class Network_layer:
                         print(REDE, "MAC == ID ")
                         next_node = header._seq_list[i-1]
                         break
-                print(REDE, "Adding the pack to Link Layer")
+                print(REDE, "[Layer Network] - Preparing to send the package to Link Layer")
                 self._link_layer.add_pck(pck, next_node)
                 id = self._link_layer._Physical_Layer._mac
                 mac_id_send_list.append(id)
@@ -108,12 +129,14 @@ class Network_layer:
 
 
             elif(not header._final_mac in self._wait_routes_list):
+                print(REDE, f"[Layer Network] - Router[{header._final_mac}] is not in the wait route list\n")
+                self._wait_routes_list.append(pck._headers[0]._final_mac)
 
-                self._wait_routes_list.append(
-                    pck._headers[0]._final_mac)
-                self.RREQ(pck._headers[0]._final_mac)
+                print(REDE, f"[Layer Network] - Adding Router[{header._final_mac}] in RREQ\n")
+                self.RREQ(header._final_mac, t)
 
         # Send pckgs to link layer
+        print(FISICA, f"[Physical Layer] - Preparing to send package to Link Layer\n")
         self._link_layer.send_pack()
 
     def receive_pck(self):

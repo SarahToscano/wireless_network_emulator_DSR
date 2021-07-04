@@ -1,3 +1,23 @@
 REDE = "\033[33m"  # Azul 
 LINK = "\033[37m"  # branco 
 FISICA = "\033[36m" # Cian
+
+vermelho = '\033[31m'
+verde = '\033[32m'
+azul = '\033[34m'
+ciano = '\033[36m'
+magenta = '\033[35m'
+amarelo = '\033[33m'
+preto = '\033[30m'
+branco = '\033[37m'
+restauracororiginal = '\033[0;0m'
+negrito = '\033[1m'
+reverso = '\033[2m'
+fundopreto = '\033[40m'
+fundovermelho = '\033[41m'
+fundoverde = '\033[42m'
+fundoamarelo = '\033[43m'
+fundoazul = '\033[44m'
+fundomagenta = '\033[45m' 
+fundociano = '\033[46m'
+fundobranco = '\033[47m'

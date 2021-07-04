@@ -1,6 +1,8 @@
 import logging
 #from header import Header
 
+from colors import negrito
+
 
 class Package:
 
@@ -12,27 +14,27 @@ class Package:
 
     @staticmethod
     def create_pck(mensage, t):
-        print("Creating a Package")
+        print(negrito, "[Package Class] - Creating a Package")
         return Package(mensage, t)
 
     def get_header_network(self):
         for header in self._headers:
-            print(f"Reading the package network header -> ID:", header._id)
+            print(negrito, f"[Package Class] - Reading the package network header -> ID:", header._id)
             if(header._layer == "Network"):
                 return header
 
     def get_header_link(self):
         for header in self._headers:
-            print("Reading the package Link header", header._layer, "-> ID:", header._id)
+            print(negrito, "[Package Class] - Reading the package Link header -> ID:", header._id)
             if(header._layer == "Link"):
                 return header
 
     def add_header(self, header):
-        print("\033[34m", f"Adding the {header._layer} header in the pack")
+        print(negrito, f" [Package Class] - Adding the {header._layer} header in the pack")
         self._headers.append(header)
 
     def show_pck_info(self):
-        print("Dados: ", self._data)
+        print("Data: ", self._data)
 
     def refresh_sequence(self, sequence):
         for header in self._headers:
