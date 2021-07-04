@@ -6,6 +6,10 @@ from header import Header
 from layer_physical import Physical_Layer
 from layer_link import Link_Layer
 
+from colors import LINK
+from colors import REDE
+from colors import FISICA
+
 
 class Network_layer:
 
@@ -49,15 +53,20 @@ class Network_layer:
         self.show_package_Mac(msg, id, None)
         self._link_layer.add_pck(pck, -1)
 
+    def show_package(self, mensagem, id, mac_final):
+        print("ID: ", id, "Mensg: ", mensagem, " macDest: ", mac_final)
+
     def add_pck(self, mac_final, mensage, t):
         id = self._link_layer._Physical_Layer._mac
         pck = Package(mensage, t)
         header = Header("Network", id, mac_final, -1, -1, -1, None)
+        print(REDE, "adding the netwok header to the package")
         pck.add_header(header)
         self._pcks_list.append(pck)  # Add package to list
+        print("\033[37m", "adding the package in the package list\n")
 
-    def show_package(self, mensagem, id, mac_final):
-        print("ID: ", id, "Mensg: ", mensagem, " macDest: ", mac_final)
+
+    
 
     def show_package_Mac(self, mensagem,  id, mac_final):
         print("ID: ", id, "Mensg: ", mensagem, " macDest: ", mac_final)

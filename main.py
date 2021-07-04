@@ -7,21 +7,21 @@ from package import Package
 from entity import hosts_list, packages_list, mac_id_send_list, show_mac_id_list, next_send_list
 from host import Host
 import logging
+from colors import LINK
+from colors import REDE
+from colors import FISICA
 
 logging.basicConfig(filename='report.log', filemode='w',
-                    format='%(name)s - %(levelname)s - %(message)s')
+                    format=' %(levelname)s - %(message)s')
 
 
 logging.getLogger().setLevel(logging.INFO)
 logging.getLogger().setLevel(logging.DEBUG)
-logging.basicConfig(
-    format='%(asctime)s - %(levelname)s: %(message)s', datefmt='%I:%M:%S')
 
 logging.info('Starting the application...')
+print("\033[37m","Starting the application...")
 
 # Defining the hosts
-n_hosts = 5
-logging.info(f'Creating {n_hosts} Wireless Hosts...')
 h0 = Host(x=0, y=0, reach=2, mac=0, energy=10)
 h1 = Host(x=1, y=0, reach=2, mac=1, energy=10)
 h2 = Host(x=2, y=1, reach=2, mac=2, energy=10)
@@ -29,38 +29,37 @@ h3 = Host(x=3, y=0, reach=2, mac=3, energy=10)
 h4 = Host(x=4, y=0, reach=2, mac=4, energy=10)
 h5 = Host(x=5, y=3, reach=4, mac=5, energy=10)
 
-hosts_list = [h0, h1, h2, h3, h4, h5]
+logging.info(f'Creating {len(hosts_list)} Wireless Hosts...')
+print("\033[37m",f'Creating {len(hosts_list)} Wireless Hosts...')
 
-mac = []
-x = []
-y = []
-reach = []
-
-for host in hosts_list:
-    mac.append(host._layer_network._link_layer._Physical_Layer._mac)
-    x.append(host._layer_network._link_layer._Physical_Layer._x)
-    y.append(host._layer_network._link_layer._Physical_Layer._y)
-    reach.append(host._layer_network._link_layer._Physical_Layer._reach)
+timemax = 5 
+for i in range(timemax):
+    print("\033[35m", "\n TIME: ", i, end="\n\n", )
+    logging.info(f"\n TIME: {i}")
 
 
-#criaGraficos(id, x, y, reach)
-
-# Loop do tempo
-for i in range(30):
-    print("\n Tempo: ", i, end="\n\n", )
-    # Loop para percorrer
+    #Create all packages
+    print("\033[34m", 'LOOP - defining the packages')
     for host in hosts_list:
-        # Numero aleatorio entre 0 e 100 para probabilidade de criação de pacotes
-        rand = random.randint(0, 100)
-        # Numero aleatorio entre 0 e a quantidade de hosts, para escolher um para enviar
-        send = random.randint(0, len(hosts_list)-1)
-        # Teste se rand é menor que 4
-        if(rand < 3):
-            # Se o ID do destino for diferente do dele mesmo, adiciona o pacote no host
-            if(send != (host._layer_network._link_layer._Physical_Layer._mac)):
-                host.create_packge(1, 3, "Será que vamos passar")
+        print("\033[34m",f'Origem: Host[{host._mac}]')
+        destinationHost = random.randint(0, len(hosts_list)-1)
+        print("\033[34m",f'Destination: Host[{destinationHost}]')
+        prob = random.randint(0, 10)
+        if(prob > 7):
+            #o mac o host que quer enviar é != o que vai receber?
+            if(host._layer_network._link_layer._Physical_Layer._mac != destinationHost):
+                print("\033[32m",'Package? YEEEESS!!!\n')
+
+                host.create_packge(i, destinationHost, "msg 1 - testeeeeeeeeeeee")
                 mac_id_send_list.append(
                     host._layer_network._link_layer._Physical_Layer._mac)
+
+            else:
+                print("\033[31m", 'Package? NO!!! Same ID and Final Mac ;(')
+            
+        else:
+            print("\033[31m", 'Package? NO!!!')
+
 
     if(next_send_list != []):
         for i in next_send_list:
@@ -76,3 +75,19 @@ for i in range(30):
     for i in mac_id_send_list:
         hosts_list[i]._layer_network.send_pack()
     del mac_id_send_list[:]
+
+    
+
+    mac = []
+    x = []
+    y = []
+    reach = []
+
+    for host in hosts_list:
+        mac.append(host._layer_network._link_layer._Physical_Layer._mac)
+        x.append(host._layer_network._link_layer._Physical_Layer._x)
+        y.append(host._layer_network._link_layer._Physical_Layer._y)
+        reach.append(host._layer_network._link_layer._Physical_Layer._reach)
+
+
+    #criaGraficos(id, x, y, reach)
