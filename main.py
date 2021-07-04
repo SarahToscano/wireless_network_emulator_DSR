@@ -48,7 +48,7 @@ for i in range(timemax):
         if(prob > 7):
             #o mac o host que quer enviar é != o que vai receber?
             if(host._layer_network._link_layer._Physical_Layer._mac != destinationHost):
-                print("\033[32m",'Package? YEEEESS!!!\n')
+                print("\033[32m",'Package? YEEEESS!!!')
 
                 host.create_packge(i, destinationHost, "msg 1 - testeeeeeeeeeeee")
                 mac_id_send_list.append(
@@ -60,19 +60,22 @@ for i in range(timemax):
         else:
             print("\033[31m", 'Package? NO!!!')
 
-
+    print("\033[31m" , "next_send_list: ", next_send_list)
     if(next_send_list != []):
         for i in next_send_list:
             mac_id_send_list.append(i)
     del next_send_list[:]
 
     # Existe algum nó querendo receber, recebe
+    print("\033[31m" ,"show_mac_id_list: ", show_mac_id_list)
     for j in show_mac_id_list:
-        hosts_list[j]._layer_network.receive_pack()
+        hosts_list[j]._layer_network.receive_pck()
     del show_mac_id_list[:]
 
     # Existe algum nó querendo transmitir, transmite naquele instante se posssível
+    print("\033[31m" , "List of hosts that will send: ", mac_id_send_list)
     for i in mac_id_send_list:
+        print(REDE, f"host[{hosts_list[i]._mac}] access send_pack method - network layer")
         hosts_list[i]._layer_network.send_pack()
     del mac_id_send_list[:]
 

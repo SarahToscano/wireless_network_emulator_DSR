@@ -3,7 +3,6 @@ import logging
 
 
 def neighbors(posX_origem, posY_origem, reach, posX_f, posY_f):
-    print('Finding the neighborhood')
     a = (posX_origem - posX_f)**2
     b = (posY_origem - posY_f)**2
     euclidean = math.sqrt(a + b)

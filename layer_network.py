@@ -30,9 +30,9 @@ class Network_layer:
         self.show_package_Mac(msg, id, mac_final)
 
         # Define the request route
-        for i, mac in enumerate(header.num_pack):
+        for i, mac in enumerate(header._seq_list):
             if(mac == id):
-                next_node = header.num_pack[i+1]
+                next_node = header._seq_list[i+1]
                 next_pck = pck
                 self._link_layer.add_pck(next_pck, next_node)
                 break
@@ -60,7 +60,6 @@ class Network_layer:
         id = self._link_layer._Physical_Layer._mac
         pck = Package(mensage, t)
         header = Header("Network", id, mac_final, -1, -1, -1, None)
-        print(REDE, "adding the netwok header to the package")
         pck.add_header(header)
         self._pcks_list.append(pck)  # Add package to list
         print("\033[37m", "adding the package in the package list\n")
@@ -87,20 +86,26 @@ class Network_layer:
                     if (pck._headers[0].final_mac in self._wait_routes_list):
                         self._wait_routes_list.remove(
                             pck._headers[0].final_mac)
+            
 
             # Is there this route?
             if(seq != None):
+                print(REDE, "are there already routes?")
                 pck.refresh_sequence(seq)
                 self._pcks_list.pop(0)
 
                 for i, mac in enumerate(pck._headers[0]._seq_list):
                     id = self._link_layer._Physical_Layer._mac
                     if(mac == id):
-                        next_node = header.num_pack[i+1]
+                        print(REDE, "MAC == ID ")
+                        next_node = header._seq_list[i-1]
                         break
+                print(REDE, "Adding the pack to Link Layer")
                 self._link_layer.add_pck(pck, next_node)
                 id = self._link_layer._Physical_Layer._mac
                 mac_id_send_list.append(id)
+                print(REDE, "Adding the host ID in the host sender list")
+
 
             elif(not header._final_mac in self._wait_routes_list):
 
@@ -112,7 +117,9 @@ class Network_layer:
         self._link_layer.send_pack()
 
     def receive_pck(self):
-        self._link_layer.receive_pack()  # Trata pacote recebido na camada de enlace
+        print(REDE, "PACKAGE RECEIVED IN NETWORK LAYER")
+
+        self._link_layer.receive_pck()  # Trata pacote recebido na camada de enlace
 
         # Verifica se tem pacotes recebidos
         if(self._link_layer._pck_read != []):
@@ -138,7 +145,7 @@ class Network_layer:
                     for i, mac in enumerate(pckg._headers[0]._seq_list):
                         id = self._link_layer._Physical_Layer._mac
                         if(mac == id):
-                            next_node = header.num_pack[i-1]
+                            next_node = header._seq_list[i-1]
                             break
 
                     pckg._headers.pop(1)
@@ -150,12 +157,12 @@ class Network_layer:
             # Se o pacote for recebido for um RREQ
             elif(header._req == 0):
                 mensage = "Chegada de pacote RREQ"
-                self.show_sequence_num(
-                    mensage, self._link_layer._Physical_Layer._mac, header.num_pack)
+                self.show_package_Seq(
+                    mensage, self._link_layer._Physical_Layer._mac, header._num_pack)
                 # Verifica se esse RREQ já foi recebido pelo nó
-                if(not header.num_pack in self._RREQS_list):
-                    self._RREQS_list.append(header.num_pack)
-                    header.seq_list.append(
+                if(not header._num_pack in self._RREQS_list):
+                    self._RREQS_list.append(header._num_pack)
+                    header._seq_list.append(
                         self._link_layer._Physical_Layer._mac)
 
                     # Verifica se o RREQ é para o nó
@@ -163,11 +170,11 @@ class Network_layer:
                         mensage = "Eu sou o destino do RREQ"
                         self.show_package(
                             mensage, self._link_layer._Physical_Layer._mac, 0)
-                        route = header.seq_list
+                        route = header._seq_list
                         final_mac = route[0]
                         sequence_route = route
                         sequence_route.reverse()
-                        self.send_RREP(final_mac, sequence_route, route)
+                        self.RREP(final_mac, sequence_route, route)
                         mac_id_send_list.append(
                             self._link_layer._Physical_Layer._mac)
 
@@ -181,13 +188,13 @@ class Network_layer:
                 else:
                     mensage = "Ja tenho esse RREQ"
                     self.show_package_Seq(
-                        mensage, self._link_layer._Physical_Layer._mac, header.num_pack)
+                        mensage, self._link_layer._Physical_Layer._mac, header._num_pack)
             # Se o pacote for recebido for um RREP
             elif(header._req == 1):
                 dest = header._final_mac
                 mensage = "Chegada de pacote RREP: "
                 self.show_package_Seq(
-                    mensage, self._link_layer._Physical_Layer._mac, header.seq_list)
+                    mensage, self._link_layer._Physical_Layer._mac, header._seq_list)
                 # Verifica se o RREP é para o nó
                 if(dest == self._link_layer._Physical_Layer._mac):
                     mensage = "Eu sou o destino do RREP"
@@ -197,7 +204,7 @@ class Network_layer:
                     self.show_package(
                         mensage, self._link_layer._Physical_Layer._mac, 0)
                     sequence_route = pckg._data
-                    route = Route(header.seq_list[0], sequence_route)
+                    route = Route(header._seq_list[0], sequence_route)
                     self._routes.append(route)
                     mac_id_send_list.append(
                         self._link_layer._Physical_Layer._mac)
@@ -206,9 +213,9 @@ class Network_layer:
                     mensage = "Eu não sou o destino do RREP"
                     self.show_package(
                         mensage, self._link_layer._Physical_Layer._mac, 0)
-                    for i, mac in enumerate(header.seq_list):
+                    for i, mac in enumerate(header._seq_list):
                         if(mac == self._link_layer._Physical_Layer._mac):
-                            next_host = header.seq_list[i+1]
+                            next_host = header._seq_list[i+1]
                             next_pck = pckg
                             pckg._headers.pop(1)
                             self._link_layer.add_pck(

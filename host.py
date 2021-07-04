@@ -21,7 +21,7 @@ class Host:
             Physical_Layer(x, y, mac, reach, energy)))
 
     def create_packge(self, t, final_mac, mensage):
-        print("\033[32m",'Creating a package')
+        print("\033[32m",'\nCreating a package')
         self.show_package(
             self._layer_network._link_layer._Physical_Layer._mac, final_mac, mensage)
 

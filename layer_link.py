@@ -5,6 +5,10 @@ from random import randint
 from header import Header
 
 
+from colors import LINK
+from colors import REDE
+from colors import FISICA
+
 class Link_Layer:
 
     def __init__(self, Physical_Layer):
@@ -30,9 +34,10 @@ class Link_Layer:
                 next_send_list.append(self._Physical_Layer._mac)
 
     def receive_pck(self):
+        print(LINK, "PACKAGE RECEIVED IN THE LINK LAYER")
         if(len(self._Physical_Layer._pck_received) > 1):
             self._Physical_Layer._pck_received.clear()
-            self.print_collision(self._Physical._mac)
+            self.print_collision(self._Physical_Layer._mac)
         else:
             if(len(self._Physical_Layer._pck_received) == 1):
                 Package = self._Physical_Layer._pck_received.pop(0)
@@ -56,7 +61,9 @@ class Link_Layer:
             return False
 
     def add_pck(self,  Package, final_mac):
+        print(LINK, "Acessing the Add_pack method - Link Layer")
         header = Header("Link", self._Physical_Layer._mac,
                         final_mac, 0, -1, -1, -1)
         Package.add_header(header)
+        print(LINK, "Sending the package to the Physical Layer")
         self._Physical_Layer.send_pack(Package)
