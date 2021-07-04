@@ -62,7 +62,7 @@ class Network_layer:
         header = Header("Network", id, mac_final, -1, -1, -1, None)
         pck.add_header(header)
         self._pcks_list.append(pck)  # Add package to list
-        print("\033[37m", "adding the package in the package list\n")
+        print(REDE, "adding the package in the package list\n")
 
 
     
@@ -81,11 +81,11 @@ class Network_layer:
             seq = None
 
             for route in self._routes:
-                if(route._receiver == pck._headers[0].final_mac):
+                if(route._receiver == pck._headers[0]._final_mac):
                     seq = route._seq
-                    if (pck._headers[0].final_mac in self._wait_routes_list):
+                    if (pck._headers[0]._final_mac in self._wait_routes_list):
                         self._wait_routes_list.remove(
-                            pck._headers[0].final_mac)
+                            pck._headers[0]._final_mac)
             
 
             # Is there this route?
