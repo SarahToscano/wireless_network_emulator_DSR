@@ -33,7 +33,7 @@ h5 = Host(x=5, y=3, reach=4, mac=5, energy=10)
 logging.info(f'Creating {len(hosts_list)} Wireless Hosts...')
 print("\033[37m",f'Creating {len(hosts_list)} Wireless Hosts...')
 
-timemax = 10
+timemax = 15
 for i in range(timemax):
     print("\033[35m", "\n TIME: ", i, end="\n\n", )
     print("\033[34m", 'LOOP - defining the packages')
@@ -42,29 +42,11 @@ for i in range(timemax):
         hosts_list[0].create_packge(0, 2, "msg 1 - lute bem muito")
         mac_id_send_list.append(hosts_list[0]._layer_network._link_layer._Physical_Layer._mac)
 
-        hosts_list[1].create_packge(1, 4, "msg 1 - lute bem muito")
-        mac_id_send_list.append(hosts_list[1]._layer_network._link_layer._Physical_Layer._mac)
+        hosts_list[3].create_packge(3, 4, "msg 2 - lutei")
+        mac_id_send_list.append(hosts_list[3]._layer_network._link_layer._Physical_Layer._mac)
 
-        '''for host in hosts_list:
-            print('\033[40m', "\033[34m",f'Origem: Host[{host._mac}]')
-            prob = random.randint(0, 10)
-            destinationHost = random.randint(0, len(hosts_list)-1)
-            print("\033[34m",f'Destination: Host[{destinationHost}]')
-            if(prob > 7):
-                #o mac o host que quer enviar é != o que vai receber?
-                if(host._layer_network._link_layer._Physical_Layer._mac != destinationHost):
-                    print("\033[32m",'Package? YEEEESS!!!')
-                    host.create_packge(i, destinationHost, {"msg 1 - testeeeeeeeeeeee", "fdfs"})
-                    mac_id_send_list.append(
-                        host._layer_network._link_layer._Physical_Layer._mac)
-                else:
-                    print("\033[31m", 'Package? NO!!! Same ID and Final Mac ;(')
-            else:
-                if(host._layer_network._link_layer._Physical_Layer._mac == destinationHost):
-                    print("\033[31m", 'Package? NO!!! Same ID and Final Mac ;(')
-                else:
-                    print("\033[31m", 'Package? NO!!!')
-        '''
+       
+        
 
     print("\033[31m" , "next_send_list: ", next_send_list)
     if(next_send_list != []):

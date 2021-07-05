@@ -9,6 +9,7 @@ from layer_link import Link_Layer
 from colors import LINK
 from colors import REDE
 from colors import FISICA
+from colors import vermelho
 
 
 class Network_layer:
@@ -83,10 +84,10 @@ class Network_layer:
     
 
     def show_package_Mac(self, mensagem,  id, mac_final):
-        print(f"- Package [{id}] Info: ", "Mensg: ", mensagem, " macDest: ", mac_final)
+        print('\033[37m', f"- Package [{id}] Info: ", "Mensg: ", mensagem, " macDest: ", mac_final)
 
     def show_package_Seq(self, mensagem,  id, sequenNum):
-        print(f"- Package [{id}] Info:", "Mensg: ", mensagem,
+        print('\033[32m', f"- Package [{id}] Info:", "Mensg: ", mensagem,
               " Numero de seq: ", sequenNum)
 
     def send_pack(self,t):
@@ -111,15 +112,17 @@ class Network_layer:
 
             # Is there this route?
             if(seq != None):
-                print(REDE, "are there already routes?")
+                print(REDE, " there are already routes")
                 pck.refresh_sequence(seq)
                 self._pcks_list.pop(0)
 
                 for i, mac in enumerate(pck._headers[0]._seq_list):
                     id = self._link_layer._Physical_Layer._mac
+                    print(f"Transmission - router[{mac}] ")
                     if(mac == id):
                         print(REDE, "MAC == ID ")
                         next_node = header._seq_list[i-1]
+                        print("Next Node: ", next_node)
                         break
                 print(REDE, "[Layer Network] - Preparing to send the package to Link Layer")
                 self._link_layer.add_pck(pck, next_node)
@@ -136,7 +139,7 @@ class Network_layer:
                 self.RREQ(header._final_mac, t)
 
         # Send pckgs to link layer
-        print(FISICA, f"[Physical Layer] - Preparing to send package to Link Layer\n")
+        print(LINK, f"[Link Layer] - Call the  package send method of Link Layer\n")
         self._link_layer.send_pack()
 
     def receive_pck(self):
@@ -202,8 +205,9 @@ class Network_layer:
                             self._link_layer._Physical_Layer._mac)
 
                     else:
-                        print("ID: ", self._link_layer._Physical_Layer._mac,
+                        print(vermelho, f"HOST[{self._link_layer._Physical_Layer._mac}]: ",
                               "Eu não sou o destino do RREQ")
+                        print(LINK,"ADD package to Link Layer...Retransmission")
                         self._link_layer.add_pck(pckg, -1)
                         mac_id_send_list.append(
                             self._link_layer._Physical_Layer._mac)

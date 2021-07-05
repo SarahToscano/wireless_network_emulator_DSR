@@ -40,10 +40,10 @@ class Physical_Layer:
                         print("\033[31m",f"Found Host[{hosts_list[i]._mac}]")
                         self._neighborhood.append(hosts_list[i])
 
-    def send_pack(self, package):
+    def send_pack(self):
         print(FISICA, "PHYSICAL LAYER ACTIVATED")
         self.find_neighbors()
-        self._pck_sent.append(package)
+        #self._pck_sent.append(package)
         
         for host in self._neighborhood:
             print(FISICA, "[Physical Layer] - Send packages to the neighborhood: Broadcast")
@@ -52,5 +52,7 @@ class Physical_Layer:
         # Add package to save list
         print(FISICA, "[Physical Layer] - Adding the pack in the save list")
         self._pck_saves.append(self._pck_sent.pop(0))
+
+
 
         
