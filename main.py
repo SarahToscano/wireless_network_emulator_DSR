@@ -11,6 +11,7 @@ from colors import LINK
 from colors import REDE
 from colors import FISICA
 from colors import verde
+from graph import *
 
 logging.basicConfig(filename='report.log', filemode='w',
                     format=' %(levelname)s - %(message)s')
@@ -80,5 +81,4 @@ for i in range(timemax):
         y.append(host._layer_network._link_layer._Physical_Layer._y)
         reach.append(host._layer_network._link_layer._Physical_Layer._reach)
 
-
-    #criaGraficos(id, x, y, reach)
+plot_graph(hosts_list, -10, -10, 10, 10)
