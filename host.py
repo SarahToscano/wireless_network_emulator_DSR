@@ -1,6 +1,6 @@
 from neighbors import neighbors
 import logging
-from entity import hosts_list
+from globais import hosts_list
 from layer_network import Network_layer
 from layer_physical import Physical_Layer
 from layer_link import Link_Layer
@@ -22,11 +22,13 @@ class Host:
             Physical_Layer(x, y, mac, reach, energy)))
 
     def create_packge(self, t, final_mac, mensage):
-        print(ciano,'\n[Host class] - Create Package method of host class -> Creating a package')
+        print(
+            ciano, '\n[Host class] - Create Package method of host class -> Creating a package')
         self.show_package(
             self._layer_network._link_layer._Physical_Layer._mac, final_mac, mensage)
 
-        print(ciano,'[Host class] - Preparing to add  the package in the layer network...')   
+        print(
+            ciano, '[Host class] - Preparing to add  the package in the layer network...')
         self._layer_network.add_pck(final_mac, mensage, t)
 
     def show_package(self,  id, final_mac, mensage):
